@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Check, Loader2 } from 'lucide-react';
@@ -8,7 +7,7 @@ import { toast } from 'sonner';
 import useRazorpay from 'react-razorpay';
 
 const Students = () => {
-  const [Razorpay] = useRazorpay();
+  const Razorpay = useRazorpay();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -88,26 +87,20 @@ const Students = () => {
   const handlePayment = () => {
     setLoading(true);
     
-    // Initialize Razorpay payment
     const options = {
-      key: "rzp_test_mGtzDnks0JXyLY", // Replace with your actual Razorpay key
-      amount: 24900, // Amount in paise (249 INR)
+      key: "rzp_test_mGtzDnks0JXyLY",
+      amount: 24900,
       currency: "INR",
       name: "DigiSanchaar",
       description: "Passive Income Program Registration",
       image: "/placeholder.svg",
       handler: function (response: any) {
-        // Handle the payment success
         console.log("Payment successful", response);
         setLoading(false);
         setPaymentComplete(true);
         
-        // Send email with WhatsApp group link
-        // In a real application, this would be a server call
         setTimeout(() => {
           toast.success('WhatsApp group link sent to your email!');
-          
-          // You would normally send this information to your backend
           console.log("Sending registration details to backend", {
             paymentId: response.razorpay_payment_id,
             formData
@@ -124,7 +117,7 @@ const Students = () => {
         purpose: "DigiSanchaar Passive Income Program"
       },
       theme: {
-        color: "#ff6b35", // DigiSanchaar orange
+        color: "#ff6b35",
       },
       modal: {
         ondismiss: function () {
@@ -163,7 +156,6 @@ const Students = () => {
               </p>
             </div>
             
-            {/* Progress Steps */}
             <div className="flex justify-between items-center mb-8 relative">
               <div className="absolute left-0 right-0 top-1/2 h-1 bg-gray-200 -z-10"></div>
               
