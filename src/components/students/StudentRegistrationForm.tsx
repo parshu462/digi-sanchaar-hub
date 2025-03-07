@@ -96,7 +96,7 @@ const StudentRegistrationForm = () => {
         color: "#ff6b35",
       },
       modal: {
-        ondismiss: function () {
+        ondismiss: function() {
           setLoading(false);
           toast.error('Payment cancelled. Please try again.');
         }

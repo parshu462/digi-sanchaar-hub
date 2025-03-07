@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -7,7 +6,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useCart, ReviewType } from '@/contexts/CartContext';
 
-const ReviewPurchase = () => {
+const Clients = () => {
   const navigate = useNavigate();
   const { addItem, getTotalItems } = useCart();
   const [selectedType, setSelectedType] = useState<ReviewType>('google');
@@ -20,7 +19,6 @@ const ReviewPurchase = () => {
     { id: 'amazon', name: 'Amazon Reviews', price: 40, image: '/placeholder.svg', description: 'Increase your product visibility and sales with authentic Amazon reviews' },
   ];
 
-  // Additional services
   const additionalServices = [
     { 
       id: 'seo', 
@@ -69,7 +67,7 @@ const ReviewPurchase = () => {
 
   const handleAddServiceToCart = (service: any) => {
     addItem({
-      type: service.id as ReviewType, // This is a simplification, you might want to expand your type system
+      type: service.id as ReviewType,
       quantity: 1,
       price: service.price,
       name: service.name,
@@ -259,4 +257,4 @@ const ReviewPurchase = () => {
   );
 };
 
-export default ReviewPurchase;
+export default Clients;
