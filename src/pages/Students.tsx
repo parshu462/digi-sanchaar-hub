@@ -87,6 +87,8 @@ const Students = () => {
   const handlePayment = () => {
     setLoading(true);
     
+    const dummyOrderId = "order_" + new Date().getTime();
+    
     const options = {
       key: "rzp_test_mGtzDnks0JXyLY",
       amount: 24900,
@@ -94,6 +96,7 @@ const Students = () => {
       name: "DigiSanchaar",
       description: "Passive Income Program Registration",
       image: "/placeholder.svg",
+      order_id: dummyOrderId,
       handler: function (response: any) {
         console.log("Payment successful", response);
         setLoading(false);
