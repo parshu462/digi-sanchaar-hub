@@ -20,7 +20,7 @@ interface FormData {
 }
 
 const StudentRegistrationForm = () => {
-  const [Razorpay] = useRazorpay();
+  const Razorpay = useRazorpay();
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
