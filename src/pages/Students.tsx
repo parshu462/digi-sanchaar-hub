@@ -5,8 +5,10 @@ import { Check, Loader2 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { toast } from 'sonner';
+import useRazorpay from 'react-razorpay';
 
 const Students = () => {
+  const [Razorpay] = useRazorpay();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -86,16 +88,60 @@ const Students = () => {
   const handlePayment = () => {
     setLoading(true);
     
-    // Simulate payment processing
-    setTimeout(() => {
+    // Initialize Razorpay payment
+    const options = {
+      key: "rzp_test_mGtzDnks0JXyLY", // Replace with your actual Razorpay key
+      amount: 24900, // Amount in paise (249 INR)
+      currency: "INR",
+      name: "DigiSanchaar",
+      description: "Passive Income Program Registration",
+      image: "/placeholder.svg",
+      handler: function (response: any) {
+        // Handle the payment success
+        console.log("Payment successful", response);
+        setLoading(false);
+        setPaymentComplete(true);
+        
+        // Send email with WhatsApp group link
+        // In a real application, this would be a server call
+        setTimeout(() => {
+          toast.success('WhatsApp group link sent to your email!');
+          
+          // You would normally send this information to your backend
+          console.log("Sending registration details to backend", {
+            paymentId: response.razorpay_payment_id,
+            formData
+          });
+        }, 1500);
+      },
+      prefill: {
+        name: formData.name,
+        email: formData.email,
+        contact: formData.phone
+      },
+      notes: {
+        college: formData.college,
+        purpose: "DigiSanchaar Passive Income Program"
+      },
+      theme: {
+        color: "#ff6b35", // DigiSanchaar orange
+      },
+      modal: {
+        ondismiss: function () {
+          setLoading(false);
+          toast.error('Payment cancelled. Please try again.');
+        }
+      }
+    };
+
+    try {
+      const paymentObject = new Razorpay(options);
+      paymentObject.open();
+    } catch (error) {
+      console.error("Razorpay Error:", error);
       setLoading(false);
-      setPaymentComplete(true);
-      
-      // Simulate sending WhatsApp group link
-      setTimeout(() => {
-        toast.success('WhatsApp group link sent to your email!');
-      }, 1500);
-    }, 2000);
+      toast.error('Payment failed to initialize. Please try again.');
+    }
   };
 
   return (
@@ -277,56 +323,27 @@ const Students = () => {
                           </div>
                         </div>
                         
-                        <div className="space-y-4">
-                          <div>
-                            <label className="block text-gray-700 font-medium mb-2">Select Payment Method</label>
-                            <div className="grid grid-cols-2 gap-4">
-                              <div className="border border-gray-300 rounded-md p-4 flex items-center cursor-pointer bg-gray-50">
-                                <div className="w-4 h-4 rounded-full border-2 border-digisanchaar-orange bg-digisanchaar-orange flex items-center justify-center mr-3">
-                                  <div className="w-2 h-2 bg-white rounded-full"></div>
-                                </div>
-                                <span>Credit/Debit Card</span>
-                              </div>
-                              <div className="border border-gray-300 rounded-md p-4 flex items-center cursor-pointer">
-                                <div className="w-4 h-4 rounded-full border-2 border-gray-300 mr-3"></div>
-                                <span>UPI</span>
-                              </div>
-                            </div>
-                          </div>
-                          
-                          <div className="space-y-4">
-                            <div>
-                              <label htmlFor="cardNumber" className="block text-gray-700 font-medium mb-2">Card Number</label>
-                              <input
-                                type="text"
-                                id="cardNumber"
-                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-digisanchaar-orange"
-                                placeholder="1234 5678 9012 3456"
-                              />
-                            </div>
-                            
-                            <div className="grid grid-cols-2 gap-4">
-                              <div>
-                                <label htmlFor="expiryDate" className="block text-gray-700 font-medium mb-2">Expiry Date</label>
-                                <input
-                                  type="text"
-                                  id="expiryDate"
-                                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-digisanchaar-orange"
-                                  placeholder="MM/YY"
-                                />
-                              </div>
-                              <div>
-                                <label htmlFor="cvv" className="block text-gray-700 font-medium mb-2">CVV</label>
-                                <input
-                                  type="text"
-                                  id="cvv"
-                                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-digisanchaar-orange"
-                                  placeholder="123"
-                                  maxLength={3}
-                                />
-                              </div>
-                            </div>
-                          </div>
+                        <div className="p-4 bg-blue-50 rounded-lg border border-blue-100 text-blue-800 mb-6">
+                          <p className="text-sm">
+                            <strong>Note:</strong> You'll be redirected to Razorpay to complete your payment securely. After successful payment, you'll receive the WhatsApp group link on your email.
+                          </p>
+                        </div>
+                        
+                        <div className="flex justify-center">
+                          <button
+                            onClick={handlePayment}
+                            disabled={loading}
+                            className="btn-primary w-full max-w-sm flex items-center justify-center gap-2"
+                          >
+                            {loading ? (
+                              <>
+                                <Loader2 size={18} className="animate-spin" />
+                                Processing...
+                              </>
+                            ) : (
+                              'Pay ₹249 with Razorpay'
+                            )}
+                          </button>
                         </div>
                       </>
                     )}
@@ -353,20 +370,7 @@ const Students = () => {
                       Continue
                     </button>
                   ) : !paymentComplete ? (
-                    <button
-                      onClick={handlePayment}
-                      disabled={loading}
-                      className="btn-primary flex items-center justify-center gap-2"
-                    >
-                      {loading ? (
-                        <>
-                          <Loader2 size={18} className="animate-spin" />
-                          Processing...
-                        </>
-                      ) : (
-                        'Pay ₹249'
-                      )}
-                    </button>
+                    <div></div>
                   ) : null}
                 </div>
               </div>
