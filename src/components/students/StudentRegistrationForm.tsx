@@ -105,13 +105,17 @@ const StudentRegistrationForm = () => {
     };
 
     try {
-      // Simplified Razorpay options with only required fields
+      // Generate a mock order ID - in a real application, this would come from your backend
+      const mockOrderId = `order_${Date.now()}`;
+      
+      // Razorpay options with the required order_id field
       const options = {
         key: "rzp_test_At6CSWODqdwX6K",
         amount: "24900", // Amount in paise
         currency: "INR",
         name: "DigiSanchaar",
         description: "Passive Income Program Registration",
+        order_id: mockOrderId, // Required field by RazorpayOptions type
         handler: function(response: any) {
           handlePaymentSuccess(response);
         },

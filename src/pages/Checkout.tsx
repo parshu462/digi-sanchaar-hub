@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -81,13 +82,17 @@ const Checkout = () => {
     const transactionId = `txn_${Date.now()}${Math.floor(Math.random() * 1000)}`;
     
     try {
-      // Simplified Razorpay options with only required fields
+      // Generate a mock order ID - in a real application, this would come from your backend
+      const mockOrderId = `order_${Date.now()}`;
+      
+      // Razorpay options with the required order_id field
       const options = {
         key: "rzp_test_At6CSWODqdwX6K",
         amount: (totalAmount * 100).toString(), // Amount in paise
         currency: "INR",
         name: "DigiSanchaar",
         description: "Order Payment",
+        order_id: mockOrderId, // Required field by RazorpayOptions type
         handler: function(response: any) {
           processSuccessfulPayment(response, response.razorpay_payment_id || transactionId, totalAmount);
         },
