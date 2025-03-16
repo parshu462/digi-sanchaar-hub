@@ -1,12 +1,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, LogIn, UserPlus } from 'lucide-react';
+import { SignInButton, SignUpButton, useAuth, UserButton } from "@clerk/clerk-react";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const { isSignedIn } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -58,12 +60,25 @@ const Navbar = () => {
                 {link.name}
               </Link>
             ))}
-            <Link
-              to="/get-started"
-              className="ml-2 btn-primary"
-            >
-              Get Started
-            </Link>
+            
+            {isSignedIn ? (
+              <UserButton afterSignOutUrl="/" />
+            ) : (
+              <>
+                <SignInButton mode="modal">
+                  <button className="nav-link flex items-center gap-1">
+                    <LogIn size={18} />
+                    <span>Sign In</span>
+                  </button>
+                </SignInButton>
+                <SignUpButton mode="modal">
+                  <button className="btn-primary flex items-center gap-1">
+                    <UserPlus size={18} />
+                    <span>Sign Up</span>
+                  </button>
+                </SignUpButton>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -92,13 +107,27 @@ const Navbar = () => {
                   {link.name}
                 </Link>
               ))}
-              <Link
-                to="/get-started"
-                className="btn-primary w-full text-center mt-2"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Get Started
-              </Link>
+              
+              {isSignedIn ? (
+                <div className="flex justify-center py-2">
+                  <UserButton afterSignOutUrl="/" />
+                </div>
+              ) : (
+                <>
+                  <SignInButton mode="modal">
+                    <button className="nav-link w-full flex items-center justify-center gap-1 py-2">
+                      <LogIn size={18} />
+                      <span>Sign In</span>
+                    </button>
+                  </SignInButton>
+                  <SignUpButton mode="modal">
+                    <button className="btn-primary w-full flex items-center justify-center gap-1">
+                      <UserPlus size={18} />
+                      <span>Sign Up</span>
+                    </button>
+                  </SignUpButton>
+                </>
+              )}
             </div>
           </div>
         )}
