@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -17,7 +16,6 @@ const Checkout = () => {
   const [loading, setLoading] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
   const [orderId, setOrderId] = useState('');
-  // Fix: useRazorpay returns a function, not an array to destructure
   const Razorpay = useRazorpay();
   const { user } = useUser();
 
@@ -82,17 +80,16 @@ const Checkout = () => {
     const transactionId = `txn_${Date.now()}${Math.floor(Math.random() * 1000)}`;
     
     try {
-      // Generate a mock order ID - in a real application, this would come from your backend
-      const mockOrderId = `order_${Date.now()}`;
-      
-      // Razorpay options with the required order_id field
+      // Options for Razorpay - Note: in a production environment, the order_id should be generated from your backend
       const options = {
         key: "rzp_test_At6CSWODqdwX6K",
         amount: (totalAmount * 100).toString(), // Amount in paise
         currency: "INR",
         name: "DigiSanchaar",
         description: "Order Payment",
-        order_id: mockOrderId, // Required field by RazorpayOptions type
+        // Remove order_id since we don't have a backend to generate one
+        // For testing purposes, Razorpay will create a temporary one
+        image: "https://digisanchaar.com/wp-content/uploads/2023/06/cropped-digi-logo.png",
         handler: function(response: any) {
           processSuccessfulPayment(response, response.razorpay_payment_id || transactionId, totalAmount);
         },
@@ -103,10 +100,21 @@ const Checkout = () => {
         },
         theme: {
           color: "#ff6b35"
+        },
+        modal: {
+          ondismiss: function() {
+            setLoading(false);
+            console.log('Payment modal dismissed');
+          }
+        },
+        notes: {
+          shipping_address: `${billingInfo.address}, ${billingInfo.city}, ${billingInfo.state}, ${billingInfo.pincode}`
         }
       };
 
-      const paymentObject = new Razorpay(options);
+      // Fix the type issue by using a type assertion
+      const paymentObject = new Razorpay(options as any);
+      
       paymentObject.on('payment.failed', function(response: any) {
         console.error('Payment failed:', response.error);
         setLoading(false);

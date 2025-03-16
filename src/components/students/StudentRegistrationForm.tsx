@@ -21,7 +21,6 @@ interface FormData {
 }
 
 const StudentRegistrationForm = () => {
-  // Fix: useRazorpay returns a function, not an array to destructure
   const Razorpay = useRazorpay();
   const [formData, setFormData] = useState<FormData>({
     name: '',
@@ -105,17 +104,16 @@ const StudentRegistrationForm = () => {
     };
 
     try {
-      // Generate a mock order ID - in a real application, this would come from your backend
-      const mockOrderId = `order_${Date.now()}`;
-      
-      // Razorpay options with the required order_id field
+      // Options for Razorpay - Note: in a production environment, the order_id should be generated from your backend
       const options = {
         key: "rzp_test_At6CSWODqdwX6K",
-        amount: "24900", // Amount in paise
+        amount: "24900", // Amount in paise (249 INR)
         currency: "INR",
         name: "DigiSanchaar",
         description: "Passive Income Program Registration",
-        order_id: mockOrderId, // Required field by RazorpayOptions type
+        // Remove order_id since we don't have a backend to generate one
+        // For testing purposes, Razorpay will create a temporary one
+        image: "https://digisanchaar.com/wp-content/uploads/2023/06/cropped-digi-logo.png",
         handler: function(response: any) {
           handlePaymentSuccess(response);
         },
@@ -126,10 +124,23 @@ const StudentRegistrationForm = () => {
         },
         theme: {
           color: "#ff6b35"
+        },
+        modal: {
+          ondismiss: function() {
+            setLoading(false);
+            console.log('Payment modal dismissed');
+          }
+        },
+        notes: {
+          userEmail: formData.email,
+          userPhone: formData.phone,
+          college: formData.college
         }
       };
 
-      const paymentObject = new Razorpay(options);
+      // Fix the type issue by using a type assertion
+      const paymentObject = new Razorpay(options as any);
+      
       paymentObject.on('payment.failed', function(response: any) {
         console.error("Payment failed:", response.error);
         setLoading(false);
