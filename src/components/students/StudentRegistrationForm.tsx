@@ -9,6 +9,7 @@ import PaymentStep from './PaymentStep';
 import StepIndicator from './StepIndicator';
 import FormFooter from './FormFooter';
 import { validateStep1, validateStep2 } from '@/utils/validation';
+import { sendInvoiceEmail } from '@/utils/emailService';
 
 interface FormData {
   name: string;
@@ -68,6 +69,30 @@ const StudentRegistrationForm = () => {
       setLoading(false);
       setPaymentComplete(true);
       
+      // Send invoice email
+      sendInvoiceEmail({
+        to: formData.email,
+        orderData: {
+          orderId: dummyOrderId,
+          items: [{
+            name: "DigiSanchaar Passive Income Program Registration",
+            quantity: 1,
+            price: 249
+          }],
+          billing: {
+            fullName: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            address: formData.college
+          },
+          amount: 249,
+          tax: 0,
+          subtotal: 249,
+          timestamp: new Date().toISOString(),
+          status: 'completed'
+        }
+      });
+      
       setTimeout(() => {
         toast.success('WhatsApp group link sent to your email!');
         console.log("Sending registration details to backend", {
@@ -75,12 +100,6 @@ const StudentRegistrationForm = () => {
           formData
         });
       }, 1500);
-    };
-
-    // Define a handler for when modal is dismissed
-    const handlePaymentCancel = () => {
-      setLoading(false);
-      toast.error('Payment cancelled. Please try again.');
     };
     
     const options = {
@@ -104,7 +123,6 @@ const StudentRegistrationForm = () => {
       theme: {
         color: "#ff6b35",
       }
-      // Removed the modal.ondismiss property as it's not compatible
     };
 
     try {
@@ -112,7 +130,16 @@ const StudentRegistrationForm = () => {
       paymentObject.open();
       
       // Set up an event listener for when the modal is closed
-      paymentObject.on('payment.cancel', handlePaymentCancel);
+      paymentObject.on('payment.cancel', () => {
+        setLoading(false);
+        toast.error('Payment cancelled. Please try again.');
+      });
+      
+      paymentObject.on('payment.failed', (response: any) => {
+        setLoading(false);
+        toast.error('Payment failed. Please try again.');
+        console.error("Payment failed:", response.error);
+      });
     } catch (error) {
       console.error("Razorpay Error:", error);
       setLoading(false);

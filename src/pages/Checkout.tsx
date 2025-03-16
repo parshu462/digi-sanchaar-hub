@@ -7,6 +7,9 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useCart } from '@/contexts/CartContext';
 import { toast } from 'sonner';
+import useRazorpay from 'react-razorpay';
+import { sendInvoiceEmail } from '@/utils/emailService';
+import { useUser } from '@clerk/clerk-react';
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -14,16 +17,17 @@ const Checkout = () => {
   const [loading, setLoading] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
   const [orderId, setOrderId] = useState('');
+  const Razorpay = useRazorpay();
+  const { user } = useUser();
 
   const [billingInfo, setBillingInfo] = useState({
-    fullName: '',
-    email: '',
+    fullName: user?.fullName || '',
+    email: user?.primaryEmailAddress?.emailAddress || '',
     phone: '',
     address: '',
     city: '',
     state: '',
-    pincode: '',
-    paymentMethod: 'card'
+    pincode: ''
   });
 
   const [cardInfo, setCardInfo] = useState({
@@ -72,36 +76,111 @@ const Checkout = () => {
       return false;
     }
 
-    if (billingInfo.paymentMethod === 'card') {
-      if (!cardInfo.cardNumber.trim() || cardInfo.cardNumber.length < 16) {
-        toast.error('Valid card number is required');
-        return false;
-      }
-      if (!cardInfo.expiryDate.trim() || !/^\d{2}\/\d{2}$/.test(cardInfo.expiryDate)) {
-        toast.error('Valid expiry date (MM/YY) is required');
-        return false;
-      }
-      if (!cardInfo.cvv.trim() || !/^\d{3}$/.test(cardInfo.cvv)) {
-        toast.error('Valid 3-digit CVV is required');
-        return false;
-      }
-    }
-
     return true;
   };
 
   const handlePlaceOrder = () => {
     if (!validateForm()) return;
-
+    
     setLoading(true);
     
-    // Simulate payment processing
-    setTimeout(() => {
+    // Calculate amounts
+    const tax = Math.round(getTotalPrice() * 0.18);
+    const totalAmount = getTotalPrice() + tax;
+    
+    // Generate unique order ID
+    const generatedOrderId = `DSH${Date.now()}${Math.floor(Math.random() * 1000)}`;
+    
+    // Setup Razorpay payment
+    const options = {
+      key: "rzp_test_mGtzDnks0JXyLY", // Replace with your Razorpay key
+      amount: (totalAmount * 100).toString(), // Amount in paise
+      currency: "INR",
+      name: "DigiSanchaar",
+      description: "Order Payment",
+      image: "/placeholder.svg",
+      order_id: generatedOrderId,
+      handler: function(response: any) {
+        // Process successful payment
+        setOrderId(generatedOrderId);
+        processSuccessfulPayment(response, generatedOrderId, totalAmount);
+      },
+      prefill: {
+        name: billingInfo.fullName,
+        email: billingInfo.email,
+        contact: billingInfo.phone
+      },
+      notes: {
+        address: `${billingInfo.address}, ${billingInfo.city}, ${billingInfo.state}, ${billingInfo.pincode}`,
+        items: JSON.stringify(items.map(item => `${item.name} x ${item.quantity}`))
+      },
+      theme: {
+        color: "#ff6b35"
+      }
+    };
+
+    try {
+      const paymentObject = new Razorpay(options);
+      paymentObject.open();
+      paymentObject.on('payment.failed', function(response: any) {
+        setLoading(false);
+        toast.error('Payment failed. Please try again.');
+        console.error('Payment failed:', response.error);
+      });
+      
+      paymentObject.on('payment.cancel', function() {
+        setLoading(false);
+        toast.error('Payment cancelled. Please try again.');
+      });
+    } catch (error) {
+      console.error("Razorpay Error:", error);
       setLoading(false);
+      toast.error('Payment initialization failed. Please try again.');
+    }
+  };
+  
+  const processSuccessfulPayment = async (
+    paymentResponse: any, 
+    orderIdValue: string, 
+    totalAmount: number
+  ) => {
+    try {
+      setLoading(true);
+      
+      // Prepare order data
+      const orderData = {
+        orderId: orderIdValue,
+        userId: user?.id,
+        items: items,
+        paymentId: paymentResponse.razorpay_payment_id,
+        billing: billingInfo,
+        amount: totalAmount,
+        tax: Math.round(getTotalPrice() * 0.18),
+        subtotal: getTotalPrice(),
+        timestamp: new Date().toISOString(),
+        status: 'completed'
+      };
+      
+      // In a real app, you would save this to your database
+      console.log("Order completed:", orderData);
+      
+      // Send invoice email
+      await sendInvoiceEmail({
+        to: billingInfo.email,
+        orderData: orderData
+      });
+      
+      // Update UI state
       setOrderComplete(true);
-      setOrderId(`ORD${Math.floor(Math.random() * 900000) + 100000}`);
+      setLoading(false);
       clearCart();
-    }, 2000);
+      
+      toast.success('Order placed successfully! Invoice sent to your email.');
+    } catch (error) {
+      console.error("Error processing payment:", error);
+      setLoading(false);
+      toast.error('There was an issue completing your order. Please contact support.');
+    }
   };
 
   if (items.length === 0 && !orderComplete) {
@@ -272,105 +351,22 @@ const Checkout = () => {
                     <div className="p-6">
                       <h2 className="text-xl font-semibold mb-6">Payment Method</h2>
                       
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                        <div 
-                          className={`border rounded-md p-4 flex items-center cursor-pointer ${
-                            billingInfo.paymentMethod === 'card' 
-                              ? 'border-digisanchaar-orange bg-orange-50' 
-                              : 'border-gray-300 hover:border-gray-400'
-                          }`}
-                          onClick={() => setBillingInfo({ ...billingInfo, paymentMethod: 'card' })}
-                        >
-                          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                            billingInfo.paymentMethod === 'card' 
-                              ? 'border-digisanchaar-orange' 
-                              : 'border-gray-300'
-                          }`}>
-                            {billingInfo.paymentMethod === 'card' && (
-                              <div className="w-3 h-3 bg-digisanchaar-orange rounded-full"></div>
-                            )}
-                          </div>
-                          <span className="ml-3">Credit/Debit Card</span>
-                        </div>
-                        <div 
-                          className={`border rounded-md p-4 flex items-center cursor-pointer ${
-                            billingInfo.paymentMethod === 'upi' 
-                              ? 'border-digisanchaar-orange bg-orange-50' 
-                              : 'border-gray-300 hover:border-gray-400'
-                          }`}
-                          onClick={() => setBillingInfo({ ...billingInfo, paymentMethod: 'upi' })}
-                        >
-                          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                            billingInfo.paymentMethod === 'upi' 
-                              ? 'border-digisanchaar-orange' 
-                              : 'border-gray-300'
-                          }`}>
-                            {billingInfo.paymentMethod === 'upi' && (
-                              <div className="w-3 h-3 bg-digisanchaar-orange rounded-full"></div>
-                            )}
-                          </div>
-                          <span className="ml-3">UPI</span>
-                        </div>
+                      <div className="p-4 mb-6 bg-orange-50 border border-orange-200 rounded-lg">
+                        <p className="text-sm text-orange-800">
+                          <strong>Secure Payment:</strong> You'll be redirected to Razorpay's secure payment gateway to complete your transaction.
+                        </p>
                       </div>
                       
-                      {billingInfo.paymentMethod === 'card' && (
-                        <div className="space-y-4">
-                          <div>
-                            <label htmlFor="cardNumber" className="block text-gray-700 font-medium mb-2">Card Number</label>
-                            <input
-                              type="text"
-                              id="cardNumber"
-                              name="cardNumber"
-                              value={cardInfo.cardNumber}
-                              onChange={handleCardInfoChange}
-                              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-digisanchaar-orange"
-                              placeholder="1234 5678 9012 3456"
-                              maxLength={16}
-                            />
-                          </div>
-                          
-                          <div className="grid grid-cols-2 gap-4">
-                            <div>
-                              <label htmlFor="expiryDate" className="block text-gray-700 font-medium mb-2">Expiry Date</label>
-                              <input
-                                type="text"
-                                id="expiryDate"
-                                name="expiryDate"
-                                value={cardInfo.expiryDate}
-                                onChange={handleCardInfoChange}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-digisanchaar-orange"
-                                placeholder="MM/YY"
-                                maxLength={5}
-                              />
-                            </div>
-                            <div>
-                              <label htmlFor="cvv" className="block text-gray-700 font-medium mb-2">CVV</label>
-                              <input
-                                type="text"
-                                id="cvv"
-                                name="cvv"
-                                value={cardInfo.cvv}
-                                onChange={handleCardInfoChange}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-digisanchaar-orange"
-                                placeholder="123"
-                                maxLength={3}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      )}
+                      <div className="flex items-center gap-3 mb-8">
+                        <img src="https://cdn.razorpay.com/logo.svg" alt="Razorpay" className="h-8" />
+                        <span className="text-gray-700">Secure payment powered by Razorpay</span>
+                      </div>
                       
-                      {billingInfo.paymentMethod === 'upi' && (
-                        <div>
-                          <label htmlFor="upiId" className="block text-gray-700 font-medium mb-2">UPI ID</label>
-                          <input
-                            type="text"
-                            id="upiId"
-                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-digisanchaar-orange"
-                            placeholder="yourname@upi"
-                          />
-                        </div>
-                      )}
+                      <div className="grid grid-cols-3 gap-4 mb-6">
+                        <img src="https://img.icons8.com/color/48/000000/visa.png" alt="Visa" className="h-8" />
+                        <img src="https://img.icons8.com/color/48/000000/mastercard.png" alt="Mastercard" className="h-8" />
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/UPI-Logo-vector.svg/1280px-UPI-Logo-vector.svg.png" alt="UPI" className="h-8" />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -415,7 +411,7 @@ const Checkout = () => {
                             Processing...
                           </>
                         ) : (
-                          'Place Order'
+                          'Pay Now with Razorpay'
                         )}
                       </button>
                     </div>
