@@ -17,7 +17,8 @@ const Checkout = () => {
   const [loading, setLoading] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
   const [orderId, setOrderId] = useState('');
-  const [Razorpay] = useRazorpay();
+  // Fix: useRazorpay returns a function, not an array to destructure
+  const Razorpay = useRazorpay();
   const { user } = useUser();
 
   const [billingInfo, setBillingInfo] = useState({

@@ -21,7 +21,8 @@ interface FormData {
 }
 
 const StudentRegistrationForm = () => {
-  const [Razorpay] = useRazorpay();
+  // Fix: useRazorpay returns a function, not an array to destructure
+  const Razorpay = useRazorpay();
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
