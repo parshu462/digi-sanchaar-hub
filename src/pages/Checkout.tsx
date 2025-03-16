@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -31,20 +30,9 @@ const Checkout = () => {
     pincode: ''
   });
 
-  const [cardInfo, setCardInfo] = useState({
-    cardNumber: '',
-    expiryDate: '',
-    cvv: ''
-  });
-
   const handleBillingInfoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setBillingInfo({ ...billingInfo, [name]: value });
-  };
-
-  const handleCardInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setCardInfo({ ...cardInfo, [name]: value });
   };
 
   const validateForm = () => {
@@ -89,58 +77,38 @@ const Checkout = () => {
     const tax = Math.round(getTotalPrice() * 0.18);
     const totalAmount = getTotalPrice() + tax;
     
-    // Generate unique order ID
-    const generatedOrderId = `DSH${Date.now()}${Math.floor(Math.random() * 1000)}`;
+    // Generate unique transaction ID
+    const transactionId = `txn_${Date.now()}${Math.floor(Math.random() * 1000)}`;
     
-    // Handler for payment cancellation
-    const handlePaymentCancel = () => {
-      setLoading(false);
-      toast.error('Payment cancelled. Please try again.');
-    };
-    
-    // Handler for payment failure
-    const handlePaymentFailure = (response: any) => {
-      setLoading(false);
-      toast.error('Payment failed. Please try again.');
-      console.error('Payment failed:', response.error);
-    };
-    
-    // Setup Razorpay payment
-    const options = {
-      key: "rzp_test_At6CSWODqdwX6K", // Updated with the provided API key
-      amount: (totalAmount * 100).toString(), // Amount in paise
-      currency: "INR",
-      name: "DigiSanchaar",
-      description: "Order Payment",
-      image: "/placeholder.svg",
-      order_id: generatedOrderId,
-      handler: function(response: any) {
-        // Process successful payment
-        setOrderId(generatedOrderId);
-        processSuccessfulPayment(response, generatedOrderId, totalAmount);
-      },
-      prefill: {
-        name: billingInfo.fullName,
-        email: billingInfo.email,
-        contact: billingInfo.phone
-      },
-      notes: {
-        address: `${billingInfo.address}, ${billingInfo.city}, ${billingInfo.state}, ${billingInfo.pincode}`,
-        items: JSON.stringify(items.map(item => `${item.name} x ${item.quantity}`))
-      },
-      theme: {
-        color: "#ff6b35"
-      }
-    };
-
     try {
+      // Simplified Razorpay options with only required fields
+      const options = {
+        key: "rzp_test_At6CSWODqdwX6K",
+        amount: (totalAmount * 100).toString(), // Amount in paise
+        currency: "INR",
+        name: "DigiSanchaar",
+        description: "Order Payment",
+        handler: function(response: any) {
+          processSuccessfulPayment(response, response.razorpay_payment_id || transactionId, totalAmount);
+        },
+        prefill: {
+          name: billingInfo.fullName,
+          email: billingInfo.email,
+          contact: billingInfo.phone
+        },
+        theme: {
+          color: "#ff6b35"
+        }
+      };
+
       const paymentObject = new Razorpay(options);
+      paymentObject.on('payment.failed', function(response: any) {
+        console.error('Payment failed:', response.error);
+        setLoading(false);
+        toast.error('Payment failed. Please try again.');
+      });
+      
       paymentObject.open();
-      
-      // Set up event listeners for payment actions
-      paymentObject.on('payment.failed', handlePaymentFailure);
-      paymentObject.on('payment.cancel', handlePaymentCancel);
-      
     } catch (error) {
       console.error("Razorpay Error:", error);
       setLoading(false);
@@ -150,15 +118,18 @@ const Checkout = () => {
   
   const processSuccessfulPayment = async (
     paymentResponse: any, 
-    orderIdValue: string, 
+    paymentId: string, 
     totalAmount: number
   ) => {
     try {
       setLoading(true);
       
+      // Set order ID for UI display
+      setOrderId(paymentId);
+      
       // Prepare order data
       const orderData = {
-        orderId: orderIdValue,
+        orderId: paymentId,
         userId: user?.id,
         items: items,
         paymentId: paymentResponse.razorpay_payment_id,

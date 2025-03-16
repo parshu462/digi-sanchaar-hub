@@ -62,7 +62,8 @@ const StudentRegistrationForm = () => {
   const handlePayment = () => {
     setLoading(true);
     
-    const dummyOrderId = "order_" + new Date().getTime();
+    // Generate a transaction ID for this payment
+    const transactionId = `txn_${new Date().getTime()}`;
     
     // Handler for payment success
     const handlePaymentSuccess = (response: any) => {
@@ -74,7 +75,7 @@ const StudentRegistrationForm = () => {
       sendInvoiceEmail({
         to: formData.email,
         orderData: {
-          orderId: dummyOrderId,
+          orderId: response.razorpay_payment_id || transactionId,
           items: [{
             name: "DigiSanchaar Passive Income Program Registration",
             quantity: 1,
@@ -103,50 +104,35 @@ const StudentRegistrationForm = () => {
       }, 1500);
     };
 
-    // Handler for payment cancellation
-    const handlePaymentCancel = () => {
-      setLoading(false);
-      toast.error('Payment cancelled. Please try again.');
-    };
-    
-    // Handler for payment failure
-    const handlePaymentFailure = (response: any) => {
-      setLoading(false);
-      toast.error('Payment failed. Please try again.');
-      console.error("Payment failed:", response.error);
-    };
-    
-    const options = {
-      key: "rzp_test_At6CSWODqdwX6K", // Updated with the provided API key
-      amount: "24900", // Amount in smallest currency unit (paise)
-      currency: "INR",
-      name: "DigiSanchaar",
-      description: "Passive Income Program Registration",
-      image: "/placeholder.svg",
-      order_id: dummyOrderId,
-      handler: handlePaymentSuccess,
-      prefill: {
-        name: formData.name,
-        email: formData.email,
-        contact: formData.phone
-      },
-      notes: {
-        college: formData.college,
-        purpose: "DigiSanchaar Passive Income Program"
-      },
-      theme: {
-        color: "#ff6b35",
-      }
-    };
-
     try {
+      // Simplified Razorpay options with only required fields
+      const options = {
+        key: "rzp_test_At6CSWODqdwX6K",
+        amount: "24900", // Amount in paise
+        currency: "INR",
+        name: "DigiSanchaar",
+        description: "Passive Income Program Registration",
+        handler: function(response: any) {
+          handlePaymentSuccess(response);
+        },
+        prefill: {
+          name: formData.name,
+          email: formData.email,
+          contact: formData.phone
+        },
+        theme: {
+          color: "#ff6b35"
+        }
+      };
+
       const paymentObject = new Razorpay(options);
+      paymentObject.on('payment.failed', function(response: any) {
+        console.error("Payment failed:", response.error);
+        setLoading(false);
+        toast.error('Payment failed. Please try again.');
+      });
+      
       paymentObject.open();
-      
-      // Set up event listeners for payment actions
-      paymentObject.on('payment.cancel', handlePaymentCancel);
-      paymentObject.on('payment.failed', handlePaymentFailure);
-      
     } catch (error) {
       console.error("Razorpay Error:", error);
       setLoading(false);
