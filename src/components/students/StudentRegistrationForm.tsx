@@ -62,6 +62,27 @@ const StudentRegistrationForm = () => {
     
     const dummyOrderId = "order_" + new Date().getTime();
     
+    // Define a handler for the payment complete event
+    const handlePaymentSuccess = (response: any) => {
+      console.log("Payment successful", response);
+      setLoading(false);
+      setPaymentComplete(true);
+      
+      setTimeout(() => {
+        toast.success('WhatsApp group link sent to your email!');
+        console.log("Sending registration details to backend", {
+          paymentId: response.razorpay_payment_id,
+          formData
+        });
+      }, 1500);
+    };
+
+    // Define a handler for when modal is dismissed
+    const handlePaymentCancel = () => {
+      setLoading(false);
+      toast.error('Payment cancelled. Please try again.');
+    };
+    
     const options = {
       key: "rzp_test_mGtzDnks0JXyLY",
       amount: "24900", // Amount in smallest currency unit (paise)
@@ -70,19 +91,7 @@ const StudentRegistrationForm = () => {
       description: "Passive Income Program Registration",
       image: "/placeholder.svg",
       order_id: dummyOrderId,
-      handler: function (response: any) {
-        console.log("Payment successful", response);
-        setLoading(false);
-        setPaymentComplete(true);
-        
-        setTimeout(() => {
-          toast.success('WhatsApp group link sent to your email!');
-          console.log("Sending registration details to backend", {
-            paymentId: response.razorpay_payment_id,
-            formData
-          });
-        }, 1500);
-      },
+      handler: handlePaymentSuccess,
       prefill: {
         name: formData.name,
         email: formData.email,
@@ -94,18 +103,16 @@ const StudentRegistrationForm = () => {
       },
       theme: {
         color: "#ff6b35",
-      },
-      modal: {
-        ondismiss: function() {
-          setLoading(false);
-          toast.error('Payment cancelled. Please try again.');
-        }
       }
+      // Removed the modal.ondismiss property as it's not compatible
     };
 
     try {
       const paymentObject = new Razorpay(options);
       paymentObject.open();
+      
+      // Set up an event listener for when the modal is closed
+      paymentObject.on('payment.cancel', handlePaymentCancel);
     } catch (error) {
       console.error("Razorpay Error:", error);
       setLoading(false);
