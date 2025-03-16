@@ -17,7 +17,7 @@ const Checkout = () => {
   const [loading, setLoading] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
   const [orderId, setOrderId] = useState('');
-  const Razorpay = useRazorpay();
+  const [Razorpay] = useRazorpay();
   const { user } = useUser();
 
   const [billingInfo, setBillingInfo] = useState({
@@ -91,9 +91,22 @@ const Checkout = () => {
     // Generate unique order ID
     const generatedOrderId = `DSH${Date.now()}${Math.floor(Math.random() * 1000)}`;
     
+    // Handler for payment cancellation
+    const handlePaymentCancel = () => {
+      setLoading(false);
+      toast.error('Payment cancelled. Please try again.');
+    };
+    
+    // Handler for payment failure
+    const handlePaymentFailure = (response: any) => {
+      setLoading(false);
+      toast.error('Payment failed. Please try again.');
+      console.error('Payment failed:', response.error);
+    };
+    
     // Setup Razorpay payment
     const options = {
-      key: "rzp_test_mGtzDnks0JXyLY", // Replace with your Razorpay key
+      key: "rzp_test_At6CSWODqdwX6K", // Updated with the provided API key
       amount: (totalAmount * 100).toString(), // Amount in paise
       currency: "INR",
       name: "DigiSanchaar",
@@ -122,16 +135,11 @@ const Checkout = () => {
     try {
       const paymentObject = new Razorpay(options);
       paymentObject.open();
-      paymentObject.on('payment.failed', function(response: any) {
-        setLoading(false);
-        toast.error('Payment failed. Please try again.');
-        console.error('Payment failed:', response.error);
-      });
       
-      paymentObject.on('payment.cancel', function() {
-        setLoading(false);
-        toast.error('Payment cancelled. Please try again.');
-      });
+      // Set up event listeners for payment actions
+      paymentObject.on('payment.failed', handlePaymentFailure);
+      paymentObject.on('payment.cancel', handlePaymentCancel);
+      
     } catch (error) {
       console.error("Razorpay Error:", error);
       setLoading(false);

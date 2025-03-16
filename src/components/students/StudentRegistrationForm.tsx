@@ -21,7 +21,7 @@ interface FormData {
 }
 
 const StudentRegistrationForm = () => {
-  const Razorpay = useRazorpay();
+  const [Razorpay] = useRazorpay();
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
@@ -63,7 +63,7 @@ const StudentRegistrationForm = () => {
     
     const dummyOrderId = "order_" + new Date().getTime();
     
-    // Define a handler for the payment complete event
+    // Handler for payment success
     const handlePaymentSuccess = (response: any) => {
       console.log("Payment successful", response);
       setLoading(false);
@@ -101,9 +101,22 @@ const StudentRegistrationForm = () => {
         });
       }, 1500);
     };
+
+    // Handler for payment cancellation
+    const handlePaymentCancel = () => {
+      setLoading(false);
+      toast.error('Payment cancelled. Please try again.');
+    };
+    
+    // Handler for payment failure
+    const handlePaymentFailure = (response: any) => {
+      setLoading(false);
+      toast.error('Payment failed. Please try again.');
+      console.error("Payment failed:", response.error);
+    };
     
     const options = {
-      key: "rzp_test_mGtzDnks0JXyLY",
+      key: "rzp_test_At6CSWODqdwX6K", // Updated with the provided API key
       amount: "24900", // Amount in smallest currency unit (paise)
       currency: "INR",
       name: "DigiSanchaar",
@@ -129,17 +142,10 @@ const StudentRegistrationForm = () => {
       const paymentObject = new Razorpay(options);
       paymentObject.open();
       
-      // Set up an event listener for when the modal is closed
-      paymentObject.on('payment.cancel', () => {
-        setLoading(false);
-        toast.error('Payment cancelled. Please try again.');
-      });
+      // Set up event listeners for payment actions
+      paymentObject.on('payment.cancel', handlePaymentCancel);
+      paymentObject.on('payment.failed', handlePaymentFailure);
       
-      paymentObject.on('payment.failed', (response: any) => {
-        setLoading(false);
-        toast.error('Payment failed. Please try again.');
-        console.error("Payment failed:", response.error);
-      });
     } catch (error) {
       console.error("Razorpay Error:", error);
       setLoading(false);
