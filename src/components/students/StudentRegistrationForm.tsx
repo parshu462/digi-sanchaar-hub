@@ -70,37 +70,48 @@ const StudentRegistrationForm = () => {
       setLoading(false);
       setPaymentComplete(true);
       
-      // Send invoice email
+      // Prepare invoice data
+      const invoiceData = {
+        orderId: response.razorpay_payment_id || transactionId,
+        items: [{
+          name: "DigiSanchaar Passive Income Program Registration",
+          quantity: 1,
+          price: 249
+        }],
+        billing: {
+          fullName: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          address: formData.college
+        },
+        amount: 249,
+        tax: 0,
+        subtotal: 249,
+        timestamp: new Date().toISOString(),
+        status: 'completed'
+      };
+      
+      // Send invoice email with detailed HTML
       sendInvoiceEmail({
         to: formData.email,
-        orderData: {
-          orderId: response.razorpay_payment_id || transactionId,
-          items: [{
-            name: "DigiSanchaar Passive Income Program Registration",
-            quantity: 1,
-            price: 249
-          }],
-          billing: {
-            fullName: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            address: formData.college
-          },
-          amount: 249,
-          tax: 0,
-          subtotal: 249,
-          timestamp: new Date().toISOString(),
-          status: 'completed'
-        }
+        orderData: invoiceData
+      }).then(() => {
+        toast.success('Registration successful! Check your email for details.');
+      }).catch(error => {
+        console.error("Failed to send invoice email:", error);
+        toast.error('Registration successful, but there was an issue sending the email.');
+      });
+      
+      // Also log what we would send to backend in a real implementation
+      console.log("Sending registration details to backend", {
+        paymentId: response.razorpay_payment_id,
+        formData,
+        transactionDetails: invoiceData
       });
       
       setTimeout(() => {
         toast.success('WhatsApp group link sent to your email!');
-        console.log("Sending registration details to backend", {
-          paymentId: response.razorpay_payment_id,
-          formData
-        });
-      }, 1500);
+      }, 3000);
     };
 
     try {
