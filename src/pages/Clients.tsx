@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -13,10 +14,34 @@ const Clients = () => {
   const [quantity, setQuantity] = useState<number>(10);
 
   const reviewTypes = [
-    { id: 'google', name: 'Google Maps Reviews', price: 40, image: '/placeholder.svg', description: 'Boost your business credibility with authentic Google Maps reviews from real users' },
-    { id: 'justdial', name: 'Just Dial Reviews', price: 40, image: '/placeholder.svg', description: 'Enhance your JustDial profile with positive reviews to stand out from competitors' },
-    { id: 'practo', name: 'Practo Reviews', price: 40, image: '/placeholder.svg', description: 'Perfect for healthcare professionals looking to improve their online reputation' },
-    { id: 'amazon', name: 'Amazon Reviews', price: 40, image: '/placeholder.svg', description: 'Increase your product visibility and sales with authentic Amazon reviews' },
+    { 
+      id: 'google', 
+      name: 'Google Maps Reviews', 
+      price: 40, 
+      image: 'https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80', 
+      description: 'Boost your business credibility with authentic Google Maps reviews from real users' 
+    },
+    { 
+      id: 'justdial', 
+      name: 'Just Dial Reviews', 
+      price: 40, 
+      image: 'https://images.unsplash.com/photo-1560472355-536de3962603?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80', 
+      description: 'Enhance your JustDial profile with positive reviews to stand out from competitors' 
+    },
+    { 
+      id: 'practo', 
+      name: 'Practo Reviews', 
+      price: 40, 
+      image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80', 
+      description: 'Perfect for healthcare professionals looking to improve their online reputation' 
+    },
+    { 
+      id: 'amazon', 
+      name: 'Amazon Reviews', 
+      price: 40, 
+      image: 'https://images.unsplash.com/photo-1523474253046-8cd2748b5fd2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80', 
+      description: 'Increase your product visibility and sales with authentic Amazon reviews' 
+    },
   ];
 
   const additionalServices = [
@@ -24,7 +49,7 @@ const Clients = () => {
       id: 'seo', 
       name: 'SEO Optimization Package', 
       price: 4999, 
-      image: '/placeholder.svg',
+      image: 'https://images.unsplash.com/photo-1571106191037-7bd1456c4acf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
       description: 'Complete SEO package including keyword research, on-page and off-page optimization',
       features: ['Keyword Research', 'On-Page SEO', 'Off-Page SEO', 'Monthly Reporting']
     },
@@ -32,7 +57,7 @@ const Clients = () => {
       id: 'social', 
       name: 'Social Media Marketing', 
       price: 2999, 
-      image: '/placeholder.svg',
+      image: 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
       description: 'Comprehensive social media management across platforms to boost your online presence',
       features: ['Content Creation', 'Regular Posting', 'Engagement Monitoring', 'Performance Analytics']
     },
@@ -40,7 +65,7 @@ const Clients = () => {
       id: 'email', 
       name: 'Email Marketing Campaign', 
       price: 1999, 
-      image: '/placeholder.svg',
+      image: 'https://images.unsplash.com/photo-1596526131083-e8c633c948d2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
       description: 'Effective email campaigns to nurture leads and boost conversions',
       features: ['Campaign Design', 'Audience Segmentation', 'Automated Sequences', 'Performance Tracking']
     }
@@ -125,6 +150,13 @@ const Clients = () => {
                       >
                         <div className="flex items-start">
                           <div className="flex-grow">
+                            <div className="w-full h-32 mb-3 overflow-hidden rounded-lg">
+                              <img 
+                                src={review.image} 
+                                alt={review.name} 
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
                             <h3 className="font-medium text-gray-900">{review.name}</h3>
                             <p className="text-gray-500 text-sm mt-1">₹{review.price} per review</p>
                             <p className="text-gray-600 text-sm mt-2">{review.description}</p>
@@ -219,6 +251,13 @@ const Clients = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {additionalServices.map((service) => (
                   <div key={service.id} className="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div className="h-48 overflow-hidden">
+                      <img 
+                        src={service.image} 
+                        alt={service.name} 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
                     <div className="p-6">
                       <h3 className="text-xl font-semibold mb-2">{service.name}</h3>
                       <p className="text-gray-600 mb-4">{service.description}</p>

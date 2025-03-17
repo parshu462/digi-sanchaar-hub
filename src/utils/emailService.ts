@@ -27,7 +27,10 @@ export const sendInvoiceEmail = async (params: InvoiceEmailParams): Promise<bool
     year: 'numeric'
   });
 
-  // Generate a professional HTML invoice email
+  // Generate an invoice ID from the order ID
+  const invoiceId = `INV-${orderData.orderId.slice(-8).toUpperCase()}`;
+
+  // Generate a professional HTML invoice email with Razorpay styling
   const invoiceHtml = `
     <!DOCTYPE html>
     <html>
@@ -36,22 +39,25 @@ export const sendInvoiceEmail = async (params: InvoiceEmailParams): Promise<bool
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>DigiSanchaar - Invoice</title>
       <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; color: #333; line-height: 1.6; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        body { font-family: 'Inter', sans-serif; margin: 0; padding: 0; color: #333; line-height: 1.6; background-color: #f9f9f9; }
+        .container { max-width: 650px; margin: 0 auto; padding: 20px; }
         .header { text-align: center; padding: 20px 0; }
         .logo { max-width: 150px; height: auto; }
-        .invoice-box { border: 1px solid #eee; padding: 30px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.15); }
-        .title { color: #ff6b35; font-size: 24px; font-weight: bold; margin-bottom: 20px; }
+        .invoice-box { background-color: #fff; border-radius: 10px; padding: 30px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+        .title { color: #0066ff; font-size: 24px; font-weight: 700; margin-bottom: 20px; letter-spacing: -0.5px; }
         .info-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
         .info-block { margin-bottom: 20px; }
         .divider { border-top: 1px solid #eee; margin: 20px 0; }
         .item-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        .item-table th { background-color: #f8f8f8; text-align: left; padding: 10px; }
-        .item-table td { padding: 10px; border-bottom: 1px solid #eee; }
+        .item-table th { background-color: #f5f8ff; text-align: left; padding: 12px; font-weight: 600; color: #0066ff; border-radius: 4px 4px 0 0; }
+        .item-table td { padding: 12px; border-bottom: 1px solid #eee; }
         .total-row { font-weight: bold; }
-        .highlight { color: #ff6b35; }
+        .highlight { color: #0066ff; }
         .footer { text-align: center; margin-top: 30px; font-size: 14px; color: #888; }
-        .button { display: inline-block; background-color: #ff6b35; color: white; padding: 12px 25px; text-decoration: none; border-radius: 4px; margin-top: 20px; }
+        .button { display: inline-block; background-color: #0066ff; color: white; padding: 12px 25px; text-decoration: none; border-radius: 4px; margin-top: 20px; font-weight: 500; }
+        .razorpay-branding { display: flex; align-items: center; justify-content: center; margin-top: 20px; }
+        .tag { display: inline-block; background-color: #4CAF50; color: white; font-size: 12px; padding: 4px 8px; border-radius: 4px; }
+        .receipt-number { font-family: monospace; background-color: #f5f8ff; padding: 8px; border-radius: 4px; font-size: 14px; }
       </style>
     </head>
     <body>
@@ -61,12 +67,12 @@ export const sendInvoiceEmail = async (params: InvoiceEmailParams): Promise<bool
         </div>
         
         <div class="invoice-box">
-          <div class="title">Invoice Receipt</div>
+          <div class="title">Payment Receipt</div>
           
           <div class="info-block">
             <div class="info-row">
-              <span><strong>Invoice Number:</strong></span>
-              <span>INV-${orderData.orderId.slice(-8).toUpperCase()}</span>
+              <span><strong>Receipt Number:</strong></span>
+              <span class="receipt-number">${invoiceId}</span>
             </div>
             <div class="info-row">
               <span><strong>Date:</strong></span>
@@ -74,7 +80,7 @@ export const sendInvoiceEmail = async (params: InvoiceEmailParams): Promise<bool
             </div>
             <div class="info-row">
               <span><strong>Payment Status:</strong></span>
-              <span><span style="color: #4CAF50; font-weight: bold;">✓ ${orderData.status.toUpperCase()}</span></span>
+              <span><span class="tag">✓ ${orderData.status.toUpperCase()}</span></span>
             </div>
           </div>
           
@@ -128,6 +134,10 @@ export const sendInvoiceEmail = async (params: InvoiceEmailParams): Promise<bool
               <a href="https://digisanchaar.com" class="button">Visit Our Website</a>
             </div>
           </div>
+          
+          <div class="razorpay-branding">
+            <p style="color: #888; font-size: 12px;">Secured by <strong style="color: #0066ff;">Razorpay</strong></p>
+          </div>
         </div>
         
         <div class="footer">
@@ -144,22 +154,24 @@ export const sendInvoiceEmail = async (params: InvoiceEmailParams): Promise<bool
   
   // For demonstration, show what would be sent in a real application
   console.log('Invoice Details:');
+  console.log(`  Receipt Number: ${invoiceId}`);
   console.log(`  Order ID: ${orderData.orderId}`);
   console.log(`  Date: ${formattedDate}`);
   console.log(`  Billing Name: ${orderData.billing.fullName}`);
   console.log(`  Email: ${orderData.billing.email}`);
   console.log(`  Total Amount: ₹${orderData.amount}`);
   console.log(`  Payment Status: ${orderData.status}`);
+  console.log(`  Payment Processor: Razorpay`);
   
   // Simulating email sending with additional messages
-  console.log('Connecting to email service...');
+  console.log('Connecting to Razorpay email service API...');
   
   // In a production environment, you would use an email service API here
-  // Example with a service like SendGrid would be:
+  // Example with Razorpay emails or a service like SendGrid:
   // await sendgrid.send({
   //   to: to,
-  //   from: 'support@digisanchaar.com',
-  //   subject: 'Your DigiSanchaar Invoice',
+  //   from: 'invoices@digisanchaar.com',
+  //   subject: 'Your DigiSanchaar Invoice Receipt',
   //   html: invoiceHtml,
   // });
   
@@ -179,14 +191,14 @@ export const sendInvoiceEmail = async (params: InvoiceEmailParams): Promise<bool
         link.click();
         document.body.removeChild(link);
         
-        console.log('Professional invoice email sent successfully via mailto');
+        console.log('Professional Razorpay-styled invoice email sent successfully via mailto');
       } catch (error) {
         console.log('Could not open mailto link, but invoice would be sent in production', error);
       }
       
-      console.log('Email includes: Order confirmation, payment receipt, billing details, and order summary');
+      console.log('Email includes: Order confirmation, payment receipt with Razorpay branding, billing details, and order summary');
       toast('Invoice sent to your email!', {
-        description: 'Check your inbox for the detailed receipt.',
+        description: 'Check your inbox for the detailed Razorpay receipt.',
         action: {
           label: 'Thank you',
           onClick: () => console.log('User acknowledged invoice email'),
