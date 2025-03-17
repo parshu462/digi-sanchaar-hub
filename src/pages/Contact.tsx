@@ -82,7 +82,7 @@ const Contact = () => {
                     </div>
                     <div>
                       <h3 className="font-medium text-gray-900 mb-1">Our Location</h3>
-                      <p className="text-gray-600">123 Main Street, Bangalore, Karnataka, India</p>
+                      <p className="text-gray-600">Delhi, India</p>
                     </div>
                   </div>
                   
@@ -92,7 +92,7 @@ const Contact = () => {
                     </div>
                     <div>
                       <h3 className="font-medium text-gray-900 mb-1">Contact Number</h3>
-                      <p className="text-gray-600">+91 9876543210</p>
+                      <p className="text-gray-600">+91 9336550512</p>
                       <p className="text-gray-600">+91 9876543211</p>
                     </div>
                   </div>
@@ -103,8 +103,8 @@ const Contact = () => {
                     </div>
                     <div>
                       <h3 className="font-medium text-gray-900 mb-1">Email Address</h3>
-                      <p className="text-gray-600">info@digisanchaar.com</p>
-                      <p className="text-gray-600">support@digisanchaar.com</p>
+                      <p className="text-gray-600">sanchaardigi1@gmail.com</p>
+                      
                     </div>
                   </div>
                 </div>

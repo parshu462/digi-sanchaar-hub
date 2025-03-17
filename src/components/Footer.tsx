@@ -21,7 +21,7 @@ const Footer = () => {
               <a href="#" className="text-gray-500 hover:text-digisanchaar-blue transition-colors duration-300">
                 <Twitter size={20} />
               </a>
-              <a href="#" className="text-gray-500 hover:text-digisanchaar-blue transition-colors duration-300">
+              <a href="https://www.instagram.com/digi.sanchaar1/" className="text-gray-500 hover:text-digisanchaar-blue transition-colors duration-300">
                 <Instagram size={20} />
               </a>
               <a href="#" className="text-gray-500 hover:text-digisanchaar-blue transition-colors duration-300">
@@ -61,15 +61,15 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-start">
                 <MapPin size={20} className="text-digisanchaar-orange mr-3 mt-1 flex-shrink-0" />
-                <span className="text-gray-600">123 Digital Street, Marketing Hub, India 400001</span>
+                <span className="text-gray-600">Delhi , India </span>
               </li>
               <li className="flex items-center">
                 <Mail size={20} className="text-digisanchaar-orange mr-3 flex-shrink-0" />
-                <a href="mailto:info@digisanchaar.com" className="text-gray-600 hover:text-digisanchaar-orange transition-colors duration-300">info@digisanchaar.com</a>
+                <a href="mailto:sanchaardigi1@gmail.com" className="text-gray-600 hover:text-digisanchaar-orange transition-colors duration-300">sanchaardigi1@gmail.com</a>
               </li>
               <li className="flex items-center">
                 <Phone size={20} className="text-digisanchaar-orange mr-3 flex-shrink-0" />
-                <a href="tel:+919876543210" className="text-gray-600 hover:text-digisanchaar-orange transition-colors duration-300">+91 98765 43210</a>
+                <a href="tel:+91933650512" className="text-gray-600 hover:text-digisanchaar-orange transition-colors duration-300">+91 93365 50512 </a>
               </li>
             </ul>
           </div>
