@@ -54,14 +54,15 @@ const HeroSection = () => {
     }
   };
 
-  // Simplified decoration variants to avoid type issues
   const decorationVariants = {
     hidden: { opacity: 0 },
     visible: { 
-      opacity: 0.6,
+      opacity: [0, 0.6, 0.4, 0.6],
       transition: { 
         duration: 4, 
-        ease: "easeInOut"
+        ease: "easeInOut",
+        repeat: Infinity,
+        repeatType: "mirror" as const
       }
     }
   };
@@ -158,7 +159,7 @@ const HeroSection = () => {
         </div>
       </div>
       
-      {/* Simplified background decorations */}
+      {/* Animated background decorations */}
       <motion.div 
         variants={decorationVariants}
         initial="hidden"
@@ -169,12 +170,14 @@ const HeroSection = () => {
         variants={decorationVariants}
         initial="hidden"
         animate="visible"
+        custom={1}
         className="absolute bottom-1/4 left-1/4 w-60 h-60 bg-red-50 rounded-full blur-3xl -z-10"
       />
       <motion.div 
         variants={decorationVariants}
         initial="hidden"
         animate="visible"
+        custom={2}
         className="absolute top-1/2 left-1/3 w-32 h-32 bg-green-50 rounded-full blur-3xl -z-10"
       />
     </section>
