@@ -62,7 +62,7 @@ const HeroSection = () => {
         duration: 4, 
         ease: "easeInOut",
         repeat: Infinity,
-        repeatType: "mirror" // Fixed: Using the specific literal type
+        repeatType: "mirror" as const
       }
     }
   };
@@ -152,7 +152,7 @@ const HeroSection = () => {
                 duration: 8, 
                 ease: "easeInOut", 
                 repeat: Infinity,
-                repeatType: "mirror" // Fixed: Using the specific literal type
+                repeatType: "mirror" as const
               }}
             />
           </motion.div>
