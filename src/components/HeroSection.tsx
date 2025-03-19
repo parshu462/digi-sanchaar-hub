@@ -62,7 +62,7 @@ const HeroSection = () => {
         duration: 4, 
         ease: "easeInOut",
         repeat: Infinity,
-        repeatType: "mirror" as const
+        repeatType: "reverse"
       }
     }
   };
@@ -152,7 +152,7 @@ const HeroSection = () => {
                 duration: 8, 
                 ease: "easeInOut", 
                 repeat: Infinity,
-                repeatType: "mirror" as const
+                repeatType: "reverse"
               }}
             />
           </motion.div>
