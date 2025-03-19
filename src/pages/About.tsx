@@ -114,14 +114,14 @@ const About = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {[
                 {
-                  name: "Rahul Sharma",
+                  name: "Kunal",
                   role: "Founder & CEO",
                   bio: "Digital marketing expert with over 10 years of experience in the industry.",
                   image: "https://randomuser.me/api/portraits/men/32.jpg"
                 },
                 {
-                  name: "Priya Patel",
-                  role: "Marketing Director",
+                  name: "Saumya Tiwari",
+                  role: "Co-Founder",
                   bio: "Specializes in creating comprehensive marketing strategies for diverse clients.",
                   image: "https://randomuser.me/api/portraits/women/44.jpg"
                 },
