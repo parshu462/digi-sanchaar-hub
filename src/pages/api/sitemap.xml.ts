@@ -1,24 +1,18 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { generateSitemap } from '@/utils/sitemap';
+import { generateSitemap } from "@/utils/sitemap";
+import { NextApiRequest, NextApiResponse } from "next";
 
 /**
- * API handler for generating and serving the sitemap.xml
+ * API handler for generating sitemap.xml
  */
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    // Define the base URL dynamically
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.digisanchaar.org';
-    
-    // Generate the sitemap XML
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:8080";
     const sitemapXml = await generateSitemap(baseUrl);
 
-    // Set the content type and return the sitemap
-    res.setHeader('Content-Type', 'application/xml');
+    res.setHeader("Content-Type", "application/xml");
     res.status(200).send(sitemapXml);
   } catch (error) {
-    console.error('Error generating sitemap:', error);
-    res.status(500).end('Failed to generate sitemap');
+    console.error("Error generating sitemap:", error);
+    res.status(500).send("Failed to generate sitemap");
   }
-};
-
-export default handler;
+}
