@@ -17,6 +17,11 @@ export const generateSitemap = async (baseUrl: string) => {
     { url: '/contact', changefreq: 'monthly', priority: 0.7 },
     { url: '/get-started', changefreq: 'monthly', priority: 0.7 },
     { url: '/clients', changefreq: 'monthly', priority: 0.7 },
+    // Adding new pages
+    { url: '/privacy-policy', changefreq: 'monthly', priority: 0.5 },
+    { url: '/terms-of-service', changefreq: 'monthly', priority: 0.5 },
+    { url: '/faq', changefreq: 'monthly', priority: 0.6 },
+    { url: '/apply', changefreq: 'weekly', priority: 0.7 },
   ];
 
   // Create a stream to write to
