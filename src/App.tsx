@@ -21,7 +21,6 @@ import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
-import Sitemap from "./pages/Sitemap";
 import Index from "./pages/Index";
 
 const queryClient = new QueryClient();
@@ -51,7 +50,6 @@ const App = () => (
               <Route path="/get-started" element={<GetStarted />} />
               <Route path="/clients" element={<Clients />} />
               <Route path="/students" element={<Students />} />
-              <Route path="/sitemap.xml" element={<Sitemap />} />
               
               {/* Protected routes */}
               <Route 
