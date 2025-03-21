@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 interface FormData {
   name: string;
@@ -62,7 +63,7 @@ const StudentFormStep2 = ({ formData, handleChange }: StudentFormStep2Props) => 
           className="mt-1 mr-2"
         />
         <label htmlFor="agreeToTerms" className="text-gray-700">
-          I agree to the <a href="#" className="text-digisanchaar-orange hover:underline">Terms and Conditions</a> and <a href="#" className="text-digisanchaar-orange hover:underline">Privacy Policy</a>
+          I agree to the <Link to="/terms-and-conditions" target="_blank" className="text-digisanchaar-orange hover:underline">Terms and Conditions</Link>, <Link to="/privacy-policy" target="_blank" className="text-digisanchaar-orange hover:underline">Privacy Policy</Link>, <Link to="/refund-policy" target="_blank" className="text-digisanchaar-orange hover:underline">Refund Policy</Link>, and <Link to="/pricing-policy" target="_blank" className="text-digisanchaar-orange hover:underline">Pricing Policy</Link>
         </label>
       </div>
     </motion.div>

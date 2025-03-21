@@ -21,6 +21,10 @@ import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
+import Refund from "./pages/Refund";
+import Pricing from "./pages/Pricing";
 
 import Index from "./pages/Index";
 
@@ -51,8 +55,13 @@ const App = () => (
               <Route path="/get-started" element={<GetStarted />} />
               <Route path="/clients" element={<Clients />} />
               <Route path="/students" element={<Students />} />
-          
               
+              {/* Legal Pages */}
+              <Route path="/terms-and-conditions" element={<Terms />} />
+              <Route path="/privacy-policy" element={<Privacy />} />
+              <Route path="/refund-policy" element={<Refund />} />
+              <Route path="/pricing-policy" element={<Pricing />} />
+          
               {/* Protected routes */}
               <Route 
                 path="/dashboard" 

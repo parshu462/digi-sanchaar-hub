@@ -75,8 +75,18 @@ const Footer = () => {
           </div>
         </div>
 
+        {/* Policies Links */}
+        <div className="border-t border-gray-200 pt-8 pb-4">
+          <div className="flex flex-wrap justify-center gap-6 mb-4">
+            <Link to="/terms-and-conditions" className="text-gray-500 hover:text-digisanchaar-orange text-sm">Terms & Conditions</Link>
+            <Link to="/privacy-policy" className="text-gray-500 hover:text-digisanchaar-orange text-sm">Privacy Policy</Link>
+            <Link to="/refund-policy" className="text-gray-500 hover:text-digisanchaar-orange text-sm">Refund Policy</Link>
+            <Link to="/pricing-policy" className="text-gray-500 hover:text-digisanchaar-orange text-sm">Pricing Policy</Link>
+          </div>
+        </div>
+
         {/* Copyright */}
-        <div className="pt-8 border-t border-gray-200 text-center">
+        <div className="text-center">
           <p className="text-gray-600 text-sm">
             © {new Date().getFullYear()} DigiSanchaar. All rights reserved.
           </p>
