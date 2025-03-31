@@ -117,19 +117,19 @@ const About = () => {
                   name: "Kunal",
                   role: "Founder & CEO",
                   bio: "Digital marketing expert with over 10 years of experience in the industry.",
-                  image: "https://randomuser.me/api/portraits/men/32.jpg"
+                  image: ""
                 },
                 {
                   name: "Saumya Tiwari",
                   role: "Co-Founder",
                   bio: "Specializes in creating comprehensive marketing strategies for diverse clients.",
-                  image: "https://randomuser.me/api/portraits/women/44.jpg"
+                  image: ""
                 },
                 {
-                  name: "Vikram Singh",
-                  role: "SEO Specialist",
+                  name: "Prashant Gupta",
+                  role: "Social Media Manager",
                   bio: "Passionate about helping businesses improve their search engine rankings.",
-                  image: "https://randomuser.me/api/portraits/men/68.jpg"
+                  image: ""
                 }
               ].map((member, index) => (
                 <div 
