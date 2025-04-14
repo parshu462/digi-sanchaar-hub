@@ -15,18 +15,14 @@ const Footer = () => {
               Empowering students while delivering exceptional marketing services to businesses worldwide.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-500 hover:text-digisanchaar-blue transition-colors duration-300">
+              <a href="https://www.facebook.com/share/1AYHiKRb9k/" className="text-gray-500 hover:text-digisanchaar-blue transition-colors duration-300">
                 <Facebook size={20} />
               </a>
-              <a href="#" className="text-gray-500 hover:text-digisanchaar-blue transition-colors duration-300">
-                <Twitter size={20} />
-              </a>
+              
               <a href="https://www.instagram.com/digi.sanchaar1/" className="text-gray-500 hover:text-digisanchaar-blue transition-colors duration-300">
                 <Instagram size={20} />
               </a>
-              <a href="#" className="text-gray-500 hover:text-digisanchaar-blue transition-colors duration-300">
-                <Linkedin size={20} />
-              </a>
+              
             </div>
           </div>
 
@@ -70,6 +66,10 @@ const Footer = () => {
               <li className="flex items-center">
                 <Phone size={20} className="text-digisanchaar-orange mr-3 flex-shrink-0" />
                 <a href="tel:+91933650512" className="text-gray-600 hover:text-digisanchaar-orange transition-colors duration-300">+91 93365 50512 </a>
+              </li>
+              <li className="flex items-center">
+                <Phone size={20} className="text-digisanchaar-orange mr-3 flex-shrink-0" />
+                <a href="tel:+918375086052" className="text-gray-600 hover:text-digisanchaar-orange transition-colors duration-300">+91 8375086052 </a>
               </li>
             </ul>
           </div>

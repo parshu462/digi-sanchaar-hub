@@ -14,7 +14,7 @@ const GetStarted = () => {
     {
       id: "basic",
       name: "Basic",
-      price: "₹4,999",
+      price: "₹7,999",
       description: "Perfect for small businesses just getting started with digital marketing.",
       features: [
         "5 Google Reviews",
@@ -27,7 +27,7 @@ const GetStarted = () => {
     {
       id: "standard",
       name: "Standard",
-      price: "₹9,999",
+      price: "₹14,999",
       description: "Ideal for growing businesses looking to expand their online presence.",
       features: [
         "15 Google Reviews",
@@ -42,7 +42,7 @@ const GetStarted = () => {
     {
       id: "premium",
       name: "Premium",
-      price: "₹19,999",
+      price: "₹25,999",
       description: "Comprehensive solution for established businesses seeking maximum impact.",
       features: [
         "30 Google Reviews",

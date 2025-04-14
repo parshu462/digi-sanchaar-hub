@@ -24,7 +24,7 @@ const Clients = () => {
     { 
       id: 'justdial', 
       name: 'Just Dial Reviews', 
-      price: 40, 
+      price: 25, 
       image: 'https://images.unsplash.com/photo-1560472355-536de3962603?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80', 
       description: 'Enhance your JustDial profile with positive reviews to stand out from competitors' 
     },
@@ -37,8 +37,8 @@ const Clients = () => {
     },
     { 
       id: 'amazon', 
-      name: 'Amazon Reviews', 
-      price: 40, 
+      name: 'Amazon Empty Box Reviews', 
+      price: 100, 
       image: 'https://images.unsplash.com/photo-1523474253046-8cd2748b5fd2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80', 
       description: 'Increase your product visibility and sales with authentic Amazon reviews' 
     },
@@ -48,15 +48,15 @@ const Clients = () => {
     { 
       id: 'seo', 
       name: 'SEO Optimization Package', 
-      price: 4999, 
-      image: 'https://images.unsplash.com/photo-1571106191037-7bd1456c4acf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
+      price: 19499, 
+      image: 'https://plus.unsplash.com/premium_photo-1685208166965-d04149118ca5?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       description: 'Complete SEO package including keyword research, on-page and off-page optimization',
       features: ['Keyword Research', 'On-Page SEO', 'Off-Page SEO', 'Monthly Reporting']
     },
     { 
       id: 'social', 
       name: 'Social Media Marketing', 
-      price: 2999, 
+      price: 24999, 
       image: 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
       description: 'Comprehensive social media management across platforms to boost your online presence',
       features: ['Content Creation', 'Regular Posting', 'Engagement Monitoring', 'Performance Analytics']
@@ -64,7 +64,7 @@ const Clients = () => {
     { 
       id: 'email', 
       name: 'Email Marketing Campaign', 
-      price: 1999, 
+      price: 14999, 
       image: 'https://images.unsplash.com/photo-1596526131083-e8c633c948d2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80',
       description: 'Effective email campaigns to nurture leads and boost conversions',
       features: ['Campaign Design', 'Audience Segmentation', 'Automated Sequences', 'Performance Tracking']

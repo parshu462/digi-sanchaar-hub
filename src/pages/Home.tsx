@@ -28,7 +28,7 @@ const Home = () => {
       icon: "🚀"
     },
     {
-      title: "Google & JustDial Reviews",
+      title: "All Kind Of Reviews",
       description: "Build credibility with authentic reviews that attract more customers to your business.",
       icon: "⭐"
     },
