@@ -23,6 +23,10 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = isMenuOpen ? 'hidden' : 'auto';
+  }, [isMenuOpen]);
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -95,7 +99,14 @@ const Navbar = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden mt-4 py-4 animate-fade-in">
+          <div className="fixed inset-0 z-40 bg-white md:hidden transition-all duration-300 ease-in-out opacity-100 pt-6 px-4">
+
+             {/* 🔥 NEW: Close Button at Top-Right */}
+    <div className="flex justify-end">
+      <button onClick={toggleMenu} className="text-gray-700" aria-label="Close menu">
+        <X size={28} />
+      </button>
+    </div>
             <div className="flex flex-col space-y-3">
               {navLinks.map((link) => (
                 <Link
