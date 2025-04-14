@@ -133,7 +133,7 @@ const Contact = () => {
                       },
                       {
                         name: "instagram",
-                        url: "https://www.linkedin.com/company/digi-sanchaar/",
+                        url: "https://www.instagram.com/digi.sanchaar1/",
                       },
                     ].map((social, index) => (
                       <a
