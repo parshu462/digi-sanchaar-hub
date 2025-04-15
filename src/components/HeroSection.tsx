@@ -36,9 +36,10 @@ const HeroSection = () => {
               transition={{ delay: 0.5, duration: 0.6 }}
               className="text-gray-600 text-lg mb-8 max-w-lg"
             >
-              Join DigiSanchaar to earn passive income while learning and contributing 
-              to top-notch marketing strategies for brands worldwide.
+             <h1> Join DigiSanchaar to earn passive income while learning and contributing 
+              to top-notch marketing strategies for brands worldwide.</h1>
             </motion.p>
+            
             
             <motion.div 
               initial={{ opacity: 0 }}
@@ -69,7 +70,7 @@ const HeroSection = () => {
           >
             <img 
               src="https://images.unsplash.com/photo-1563986768609-322da13575f3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" 
-              alt="Digital Marketing Strategy Illustration" 
+              alt="Digi Sanchaar - Full-Service Digital Marketing Agency Offering SEO, Website Development, Social Media Marketing, Reviews, and Email Campaigns" 
               className="w-full h-auto object-contain rounded-xl shadow-lg"
             />
             <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 to-red-50/30 rounded-2xl -z-10 blur-md"></div>
